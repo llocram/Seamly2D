@@ -3,12 +3,10 @@
 # Project created by QtCreator 2015-07-07T14:35:12
 #
 #-------------------------------------------------
-message("Entering seamlyme.pro")
-
 # File with common stuff for whole project
 include(../../../common.pri)
 
-QT       += core gui widgets network xml xmlpatterns printsupport svg
+QT += core gui widgets network xml xmlpatterns printsupport svg
 
 # Name of binary file
 TARGET = seamlyme
@@ -17,7 +15,9 @@ TARGET = seamlyme
 TEMPLATE = app
 
 # Use out-of-source builds (shadow builds)
-CONFIG -= debug_and_release debug_and_release_target
+CONFIG -= \
+    debug_and_release \
+    debug_and_release_target
 
 # Since Q5.4 available support C++14
 greaterThan(QT_MAJOR_VERSION, 4):greaterThan(QT_MINOR_VERSION, 3) {
@@ -57,110 +57,110 @@ DATA_RESOURCE = share/resources/diagrams.qrc # External Binary Resource
 # The list helps to check that all files are exist.
 # Don't forget to convert text to curves.
 DIAGRAMS += \
-        $${PWD}/share/resources/diagrams/Ap1.svg \
-        $${PWD}/share/resources/diagrams/Ap2.svg \
-        $${PWD}/share/resources/diagrams/Bp1.svg \
-        $${PWD}/share/resources/diagrams/Bp2.svg \
-        $${PWD}/share/resources/diagrams/Cp1.svg \
-        $${PWD}/share/resources/diagrams/Cp2.svg \
-        $${PWD}/share/resources/diagrams/Dp1.svg \
-        $${PWD}/share/resources/diagrams/Dp2.svg \
-        $${PWD}/share/resources/diagrams/Dp3.svg \
-        $${PWD}/share/resources/diagrams/Ep1.svg \
-        $${PWD}/share/resources/diagrams/Ep2.svg \
-        $${PWD}/share/resources/diagrams/Fp1.svg \
-        $${PWD}/share/resources/diagrams/Fp2.svg \
-        $${PWD}/share/resources/diagrams/Fp3.svg \
-        $${PWD}/share/resources/diagrams/Gp1.svg \
-        $${PWD}/share/resources/diagrams/Gp2.svg \
-        $${PWD}/share/resources/diagrams/Gp3.svg \
-        $${PWD}/share/resources/diagrams/Gp4.svg \
-        $${PWD}/share/resources/diagrams/Gp5.svg \
-        $${PWD}/share/resources/diagrams/Gp6.svg \
-        $${PWD}/share/resources/diagrams/Gp7.svg \
-        $${PWD}/share/resources/diagrams/Gp8.svg \
-        $${PWD}/share/resources/diagrams/Gp9.svg \
-        $${PWD}/share/resources/diagrams/Hp1.svg \
-        $${PWD}/share/resources/diagrams/Hp2.svg \
-        $${PWD}/share/resources/diagrams/Hp3.svg \
-        $${PWD}/share/resources/diagrams/Hp4.svg \
-        $${PWD}/share/resources/diagrams/Hp5.svg \
-        $${PWD}/share/resources/diagrams/Hp6.svg \
-        $${PWD}/share/resources/diagrams/Hp7.svg \
-        $${PWD}/share/resources/diagrams/Hp8.svg \
-        $${PWD}/share/resources/diagrams/Hp9.svg \
-        $${PWD}/share/resources/diagrams/Hp10.svg \
-        $${PWD}/share/resources/diagrams/Hp11.svg \
-        $${PWD}/share/resources/diagrams/Hp12.svg \
-        $${PWD}/share/resources/diagrams/Hp13.svg \
-        $${PWD}/share/resources/diagrams/Ip1.svg \
-        $${PWD}/share/resources/diagrams/Ip2.svg \
-        $${PWD}/share/resources/diagrams/Ip3.svg \
-        $${PWD}/share/resources/diagrams/Ip4.svg \
-        $${PWD}/share/resources/diagrams/Ip5.svg \
-        $${PWD}/share/resources/diagrams/Ip6.svg \
-        $${PWD}/share/resources/diagrams/Ip7.svg \
-        $${PWD}/share/resources/diagrams/Jp1.svg \
-        $${PWD}/share/resources/diagrams/Jp2.svg \
-        $${PWD}/share/resources/diagrams/Jp3.svg \
-        $${PWD}/share/resources/diagrams/Jp4.svg \
-        $${PWD}/share/resources/diagrams/Jp5.svg \
-        $${PWD}/share/resources/diagrams/Jp6.svg \
-        $${PWD}/share/resources/diagrams/Kp1.svg \
-        $${PWD}/share/resources/diagrams/Kp2.svg \
-        $${PWD}/share/resources/diagrams/Kp3.svg \
-        $${PWD}/share/resources/diagrams/Kp4.svg \
-        $${PWD}/share/resources/diagrams/Kp5.svg \
-        $${PWD}/share/resources/diagrams/Kp6.svg \
-        $${PWD}/share/resources/diagrams/Kp7.svg \
-        $${PWD}/share/resources/diagrams/Kp8.svg \
-        $${PWD}/share/resources/diagrams/Kp9.svg \
-        $${PWD}/share/resources/diagrams/Kp10.svg \
-        $${PWD}/share/resources/diagrams/Kp11.svg \
-        $${PWD}/share/resources/diagrams/Lp1.svg \
-        $${PWD}/share/resources/diagrams/Lp2.svg \
-        $${PWD}/share/resources/diagrams/Lp3.svg \
-        $${PWD}/share/resources/diagrams/Lp4.svg \
-        $${PWD}/share/resources/diagrams/Lp5.svg \
-        $${PWD}/share/resources/diagrams/Lp6.svg \
-        $${PWD}/share/resources/diagrams/Lp7.svg \
-        $${PWD}/share/resources/diagrams/Lp8.svg \
-        $${PWD}/share/resources/diagrams/Lp9.svg \
-        $${PWD}/share/resources/diagrams/Lp10.svg \
-        $${PWD}/share/resources/diagrams/Mp1.svg \
-        $${PWD}/share/resources/diagrams/Mp2.svg \
-        $${PWD}/share/resources/diagrams/Mp3.svg \
-        $${PWD}/share/resources/diagrams/Np1.svg \
-        $${PWD}/share/resources/diagrams/Np2.svg \
-        $${PWD}/share/resources/diagrams/Np3.svg \
-        $${PWD}/share/resources/diagrams/Np4.svg \
-        $${PWD}/share/resources/diagrams/Np5.svg \
-        $${PWD}/share/resources/diagrams/Op1.svg \
-        $${PWD}/share/resources/diagrams/Op2.svg \
-        $${PWD}/share/resources/diagrams/Op3.svg \
-        $${PWD}/share/resources/diagrams/Op4.svg \
-        $${PWD}/share/resources/diagrams/Op5.svg \
-        $${PWD}/share/resources/diagrams/Op6.svg \
-        $${PWD}/share/resources/diagrams/Op7.svg \
-        $${PWD}/share/resources/diagrams/Op8.svg \
-        $${PWD}/share/resources/diagrams/Op9.svg \
-        $${PWD}/share/resources/diagrams/Op10.svg \
-        $${PWD}/share/resources/diagrams/Op11.svg \
-        $${PWD}/share/resources/diagrams/Pp1.svg \
-        $${PWD}/share/resources/diagrams/Pp2.svg \
-        $${PWD}/share/resources/diagrams/Pp3.svg \
-        $${PWD}/share/resources/diagrams/Pp4.svg \
-        $${PWD}/share/resources/diagrams/Pp5.svg \
-        $${PWD}/share/resources/diagrams/Pp6.svg \
-        $${PWD}/share/resources/diagrams/Pp7.svg \
-        $${PWD}/share/resources/diagrams/Pp8.svg \
-        $${PWD}/share/resources/diagrams/Pp9.svg \
-        $${PWD}/share/resources/diagrams/Pp10.svg \
-        $${PWD}/share/resources/diagrams/Pp11.svg \
-        $${PWD}/share/resources/diagrams/Pp12.svg \
-        $${PWD}/share/resources/diagrams/Qp1.svg \
-        $${PWD}/share/resources/diagrams/Qp2.svg \
-        $${PWD}/share/resources/diagrams/Qp3.svg
+    $${PWD}/share/resources/diagrams/Ap1.svg \
+    $${PWD}/share/resources/diagrams/Ap2.svg \
+    $${PWD}/share/resources/diagrams/Bp1.svg \
+    $${PWD}/share/resources/diagrams/Bp2.svg \
+    $${PWD}/share/resources/diagrams/Cp1.svg \
+    $${PWD}/share/resources/diagrams/Cp2.svg \
+    $${PWD}/share/resources/diagrams/Dp1.svg \
+    $${PWD}/share/resources/diagrams/Dp2.svg \
+    $${PWD}/share/resources/diagrams/Dp3.svg \
+    $${PWD}/share/resources/diagrams/Ep1.svg \
+    $${PWD}/share/resources/diagrams/Ep2.svg \
+    $${PWD}/share/resources/diagrams/Fp1.svg \
+    $${PWD}/share/resources/diagrams/Fp2.svg \
+    $${PWD}/share/resources/diagrams/Fp3.svg \
+    $${PWD}/share/resources/diagrams/Gp1.svg \
+    $${PWD}/share/resources/diagrams/Gp2.svg \
+    $${PWD}/share/resources/diagrams/Gp3.svg \
+    $${PWD}/share/resources/diagrams/Gp4.svg \
+    $${PWD}/share/resources/diagrams/Gp5.svg \
+    $${PWD}/share/resources/diagrams/Gp6.svg \
+    $${PWD}/share/resources/diagrams/Gp7.svg \
+    $${PWD}/share/resources/diagrams/Gp8.svg \
+    $${PWD}/share/resources/diagrams/Gp9.svg \
+    $${PWD}/share/resources/diagrams/Hp1.svg \
+    $${PWD}/share/resources/diagrams/Hp2.svg \
+    $${PWD}/share/resources/diagrams/Hp3.svg \
+    $${PWD}/share/resources/diagrams/Hp4.svg \
+    $${PWD}/share/resources/diagrams/Hp5.svg \
+    $${PWD}/share/resources/diagrams/Hp6.svg \
+    $${PWD}/share/resources/diagrams/Hp7.svg \
+    $${PWD}/share/resources/diagrams/Hp8.svg \
+    $${PWD}/share/resources/diagrams/Hp9.svg \
+    $${PWD}/share/resources/diagrams/Hp10.svg \
+    $${PWD}/share/resources/diagrams/Hp11.svg \
+    $${PWD}/share/resources/diagrams/Hp12.svg \
+    $${PWD}/share/resources/diagrams/Hp13.svg \
+    $${PWD}/share/resources/diagrams/Ip1.svg \
+    $${PWD}/share/resources/diagrams/Ip2.svg \
+    $${PWD}/share/resources/diagrams/Ip3.svg \
+    $${PWD}/share/resources/diagrams/Ip4.svg \
+    $${PWD}/share/resources/diagrams/Ip5.svg \
+    $${PWD}/share/resources/diagrams/Ip6.svg \
+    $${PWD}/share/resources/diagrams/Ip7.svg \
+    $${PWD}/share/resources/diagrams/Jp1.svg \
+    $${PWD}/share/resources/diagrams/Jp2.svg \
+    $${PWD}/share/resources/diagrams/Jp3.svg \
+    $${PWD}/share/resources/diagrams/Jp4.svg \
+    $${PWD}/share/resources/diagrams/Jp5.svg \
+    $${PWD}/share/resources/diagrams/Jp6.svg \
+    $${PWD}/share/resources/diagrams/Kp1.svg \
+    $${PWD}/share/resources/diagrams/Kp2.svg \
+    $${PWD}/share/resources/diagrams/Kp3.svg \
+    $${PWD}/share/resources/diagrams/Kp4.svg \
+    $${PWD}/share/resources/diagrams/Kp5.svg \
+    $${PWD}/share/resources/diagrams/Kp6.svg \
+    $${PWD}/share/resources/diagrams/Kp7.svg \
+    $${PWD}/share/resources/diagrams/Kp8.svg \
+    $${PWD}/share/resources/diagrams/Kp9.svg \
+    $${PWD}/share/resources/diagrams/Kp10.svg \
+    $${PWD}/share/resources/diagrams/Kp11.svg \
+    $${PWD}/share/resources/diagrams/Lp1.svg \
+    $${PWD}/share/resources/diagrams/Lp2.svg \
+    $${PWD}/share/resources/diagrams/Lp3.svg \
+    $${PWD}/share/resources/diagrams/Lp4.svg \
+    $${PWD}/share/resources/diagrams/Lp5.svg \
+    $${PWD}/share/resources/diagrams/Lp6.svg \
+    $${PWD}/share/resources/diagrams/Lp7.svg \
+    $${PWD}/share/resources/diagrams/Lp8.svg \
+    $${PWD}/share/resources/diagrams/Lp9.svg \
+    $${PWD}/share/resources/diagrams/Lp10.svg \
+    $${PWD}/share/resources/diagrams/Mp1.svg \
+    $${PWD}/share/resources/diagrams/Mp2.svg \
+    $${PWD}/share/resources/diagrams/Mp3.svg \
+    $${PWD}/share/resources/diagrams/Np1.svg \
+    $${PWD}/share/resources/diagrams/Np2.svg \
+    $${PWD}/share/resources/diagrams/Np3.svg \
+    $${PWD}/share/resources/diagrams/Np4.svg \
+    $${PWD}/share/resources/diagrams/Np5.svg \
+    $${PWD}/share/resources/diagrams/Op1.svg \
+    $${PWD}/share/resources/diagrams/Op2.svg \
+    $${PWD}/share/resources/diagrams/Op3.svg \
+    $${PWD}/share/resources/diagrams/Op4.svg \
+    $${PWD}/share/resources/diagrams/Op5.svg \
+    $${PWD}/share/resources/diagrams/Op6.svg \
+    $${PWD}/share/resources/diagrams/Op7.svg \
+    $${PWD}/share/resources/diagrams/Op8.svg \
+    $${PWD}/share/resources/diagrams/Op9.svg \
+    $${PWD}/share/resources/diagrams/Op10.svg \
+    $${PWD}/share/resources/diagrams/Op11.svg \
+    $${PWD}/share/resources/diagrams/Pp1.svg \
+    $${PWD}/share/resources/diagrams/Pp2.svg \
+    $${PWD}/share/resources/diagrams/Pp3.svg \
+    $${PWD}/share/resources/diagrams/Pp4.svg \
+    $${PWD}/share/resources/diagrams/Pp5.svg \
+    $${PWD}/share/resources/diagrams/Pp6.svg \
+    $${PWD}/share/resources/diagrams/Pp7.svg \
+    $${PWD}/share/resources/diagrams/Pp8.svg \
+    $${PWD}/share/resources/diagrams/Pp9.svg \
+    $${PWD}/share/resources/diagrams/Pp10.svg \
+    $${PWD}/share/resources/diagrams/Pp11.svg \
+    $${PWD}/share/resources/diagrams/Pp12.svg \
+    $${PWD}/share/resources/diagrams/Qp1.svg \
+    $${PWD}/share/resources/diagrams/Qp2.svg \
+    $${PWD}/share/resources/diagrams/Qp3.svg
 
 !exists($${OUT_PWD}/$${DESTDIR}/diagrams.rcc) {
     diagrams.name = resource diagrams
@@ -170,7 +170,7 @@ DIAGRAMS += \
     diagrams.output = ${QMAKE_FILE_BASE}.rcc
     diagrams.commands = $$shell_path($$[QT_INSTALL_BINS]/rcc) -binary -no-compress ${QMAKE_FILE_IN} -o $${OUT_PWD}/$${DESTDIR}/${QMAKE_FILE_OUT}
 
-QMAKE_EXTRA_COMPILERS += diagrams
+    QMAKE_EXTRA_COMPILERS += diagrams
 }
 
 QMAKE_CLEAN += $${OUT_PWD}/$${DESTDIR}/diagrams.rcc
@@ -181,15 +181,15 @@ copyToDestdir($$INSTALL_STANDARD_TEMPLATES, $$shell_path($${OUT_PWD}/$${DESTDIR}
 include(../translations.pri)
 
 # Set "make install" command for Unix-like systems.
-unix{
+unix {
     # Prefix for binary file.
-    isEmpty(PREFIX){
+    isEmpty(PREFIX) {
         PREFIX = $$DEFAULT_PREFIX
     }
 
-    unix:!macx{
-        isEmpty(PREFIX_LIB){
-            isEmpty(PREFIX){
+    unix:!macx {
+        isEmpty(PREFIX_LIB) {
+            isEmpty(PREFIX) {
                 PR_LIB = $$DEFAULT_PREFIX
             } else {
                 PR_LIB = $$PREFIX
@@ -203,7 +203,7 @@ unix{
         QMAKE_RPATHDIR += $$PREFIX_LIB
 
         QMAKE_RPATHDIR += $$[QT_INSTALL_LIBS]
-        DATADIR =$$PREFIX/share
+        DATADIR = $$PREFIX/share
         DEFINES += DATADIR=\\\"$$DATADIR\\\" PKGDATADIR=\\\"$$PKGDATADIR\\\"
 
         # Path to bin file after installation
@@ -217,7 +217,8 @@ unix{
             target \
             rcc_diagrams
     }
-    macx{
+ 
+    macx {
         # Some macx stuff
         QMAKE_MAC_SDK = macosx
 
@@ -303,23 +304,27 @@ $$enable_ccache()
 
 include(warnings.pri)
 
-CONFIG(release, debug|release){
-    # Release mode
-    !*msvc*:CONFIG += silent
+# Release mode
+CONFIG(release, debug|release) {
     DEFINES += V_NO_ASSERT
-    !unix:*g++*{
+
+    !*msvc* {
+        CONFIG += silent
+    }
+
+    !unix:*g++* {
         QMAKE_CXXFLAGS += -fno-omit-frame-pointer # Need for exchndl.dll
     }
 
-    noDebugSymbols{ # For enable run qmake with CONFIG+=noDebugSymbols
+    noDebugSymbols { # For enable run qmake with CONFIG+=noDebugSymbols
         DEFINES += V_NO_DEBUG
     } else {
-        noCrashReports{
+        noCrashReports {
             DEFINES += V_NO_DEBUG
         }
         # Turn on debug symbols in release mode on Unix systems.
         # On Mac OS X temporarily disabled. Need find way how to strip binary file.
-        !macx:!*msvc*{
+        !macx:!*msvc* {
             QMAKE_CXXFLAGS_RELEASE   += -g -gdwarf-3
             QMAKE_CFLAGS_RELEASE += -g -gdwarf-3
             QMAKE_LFLAGS_RELEASE =
@@ -334,10 +339,10 @@ DEFINES += "BUILD_REVISION=$${DVCS_HESH}" # Make available build revision number
 # Path to recource file.
 win32:RC_FILE = share/resources/seamlyme.rc
 
-noRunPath{ # For enable run qmake with CONFIG+=noRunPath
+noRunPath { # For enable run qmake with CONFIG+=noRunPath
     # do nothing
 } else {
-    unix:!macx{
+    unix:!macx {
         # suppress the default RPATH
         # helps to run the program without Qt Creator
         # see problem with path to libqmuparser and libpropertybrowser

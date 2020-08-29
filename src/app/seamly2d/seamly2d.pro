@@ -5,27 +5,28 @@
 #-------------------------------------------------
 
 # Compilation main binary file
-message("Entering seamly2D.pro")
 
 # File with common stuff for whole project
 include(../../../common.pri)
 
 # Here we don't see "network" library, but, i think, "printsupport" depend on this library, so we still need this
 # library in installer.
-QT       += core gui widgets xml svg printsupport xmlpatterns
+QT += core gui widgets xml svg printsupport xmlpatterns
 
 # We want create executable file
 TEMPLATE = app
 
 # Name of binary file
-macx{
+macx {
     TARGET = Seamly2D
 } else {
     TARGET = seamly2d
 }
 
 # Use out-of-source builds (shadow builds)
-CONFIG -= debug_and_release debug_and_release_target
+CONFIG -= \
+    debug_and_release \
+    debug_and_release_target
 
 # Since Q5.4 available support C++14
 greaterThan(QT_MAJOR_VERSION, 4):greaterThan(QT_MINOR_VERSION, 3) {
@@ -71,15 +72,19 @@ $$enable_ccache()
 
 include(warnings.pri)
 
-CONFIG(release, debug|release){
-    # Release mode
-    !*msvc*:CONFIG += silent
+# Release mode
+CONFIG(release, debug|release) {
     DEFINES += V_NO_ASSERT
-    !unix:*g++*{
+
+    !*msvc* {
+        CONFIG += silent
+    }
+
+    !unix:*g++* {
         QMAKE_CXXFLAGS += -fno-omit-frame-pointer # Need for exchndl.dll
     }
 
-    noDebugSymbols{ # For enable run qmake with CONFIG+=noDebugSymbols
+    noDebugSymbols { # For enable run qmake with CONFIG+=noDebugSymbols
         DEFINES += V_NO_DEBUG
     } else {
         noCrashReports{
@@ -87,7 +92,7 @@ CONFIG(release, debug|release){
         }
         # Turn on debug symbols in release mode on Unix systems.
         # On Mac OS X temporarily disabled. Need find way how to strip binary file.
-        !macx:!*msvc*{
+        !macx:!*msvc* {
             QMAKE_CXXFLAGS_RELEASE += -g -gdwarf-3
             QMAKE_CFLAGS_RELEASE += -g -gdwarf-3
             QMAKE_LFLAGS_RELEASE =
@@ -128,15 +133,15 @@ win32 {
 include(../translations.pri)
 
 # Set "make install" command for Unix-like systems.
-unix{
+unix {
     # Prefix for binary file.
-    isEmpty(PREFIX){
+    isEmpty(PREFIX) {
         PREFIX = $$DEFAULT_PREFIX
     }
 
-    unix:!macx{
-        isEmpty(PREFIX_LIB){
-            isEmpty(PREFIX){
+    unix:!macx {
+        isEmpty(PREFIX_LIB) {
+            isEmpty(PREFIX) {
                 PR_LIB = $$DEFAULT_PREFIX
             } else {
                 PR_LIB = $$PREFIX
@@ -199,7 +204,8 @@ unix{
             templates \
             label
     }
-    macx{
+    
+    macx {
         # Some macx stuff
         QMAKE_MAC_SDK = macosx
 
@@ -320,7 +326,7 @@ win32:*g++* {
         $$[QT_INSTALL_BINS]/libstdc++-6.dll \
         $$[QT_INSTALL_BINS]/libwinpthread-1.dll
 
-    !noDebugSymbols:!noCrashReports{
+    !noDebugSymbols:!noCrashReports {
         package.files += \
             $${OUT_PWD}/$${DESTDIR}/seamly2d.exe.dbg \
             $${OUT_PWD}/../seamlyme/$${DESTDIR}/seamlyme.exe.dbg \
@@ -416,7 +422,7 @@ win32:*g++* {
     package_printsupport.files += $$[QT_INSTALL_PLUGINS]/printsupport/windowsprintersupport.dll
     INSTALLS += package_printsupport
 
-    noWindowsInstaller{ # For enable run qmake with CONFIG+=noWindowsInstaller
+    noWindowsInstaller { # For enable run qmake with CONFIG+=noWindowsInstaller
         #do nothing
     } else {
         SCP_FOUND = false
@@ -467,10 +473,10 @@ win32 {
     copyToDestdir($$openssl_path, $$shell_path($${OUT_PWD}/$$DESTDIR))
 }
 
-noRunPath{ # For enable run qmake with CONFIG+=noRunPath
+noRunPath { # For enable run qmake with CONFIG+=noRunPath
     # do nothing
 } else {
-    unix:!macx{
+    unix:!macx {
         # suppress the default RPATH
         # helps to run the program without Qt Creator
         # see problem with path to libqmuparser and libpropertybrowser
@@ -599,14 +605,14 @@ else:unix: LIBS += -L$${OUT_PWD}/../../libs/vpropertyexplorer/$${DESTDIR} -lvpro
 INCLUDEPATH += $${PWD}/../../libs/vpropertyexplorer
 DEPENDPATH += $${PWD}/../../libs/vpropertyexplorer
 
-noDebugSymbols{ # For enable run qmake with CONFIG+=noDebugSymbols
+noDebugSymbols { # For enable run qmake with CONFIG+=noDebugSymbols
     # do nothing
 } else {
     noStripDebugSymbols { # For enable run qmake with CONFIG+=noStripDebugSymbols
         # do nothing
     } else {
         # Strip after you link all libaries.
-        CONFIG(release, debug|release){
+        CONFIG(release, debug|release) {
             win32:!*msvc*{
                 # Strip debug symbols.
                 QMAKE_POST_LINK += objcopy --only-keep-debug bin/${TARGET} bin/${TARGET}.dbg &&
@@ -614,14 +620,14 @@ noDebugSymbols{ # For enable run qmake with CONFIG+=noDebugSymbols
                 QMAKE_POST_LINK += objcopy --add-gnu-debuglink="bin/${TARGET}.dbg" bin/${TARGET}
             }
 
-            unix:!macx{
+            unix:!macx {
                 # Strip debug symbols.
                 QMAKE_POST_LINK += objcopy --only-keep-debug ${TARGET} ${TARGET}.dbg &&
                 QMAKE_POST_LINK += objcopy --strip-debug ${TARGET} &&
                 QMAKE_POST_LINK += objcopy --add-gnu-debuglink="${TARGET}.dbg" ${TARGET}
             }
 
-            !macx:!*msvc*{
+            !macx:!*msvc* {
                 QMAKE_DISTCLEAN += bin/${TARGET}.dbg
             }
         }
