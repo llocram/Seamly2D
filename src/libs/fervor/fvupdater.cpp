@@ -215,7 +215,7 @@ void FvUpdater::startDownloadFile(QUrl url, QString name) {
 		// That way we use less RAM than when reading it at the finished()
 		// signal of the QNetworkReply
 		downloadedFile->write(m_reply->readAll());
-		int progress = downloadedFile->size() * 100.0 / m_fileSize;
+		int progress = static_cast<int>(downloadedFile->size() * 100.0L / m_fileSize);
 		setProgress(progress);
 	});
 

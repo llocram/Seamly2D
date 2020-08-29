@@ -49,31 +49,34 @@
  **
  *************************************************************************/
 
+#include <QMessageBox> // For QT_REQUIRE_VERSION
+#include <QTimer>
+
 #include "tmainwindow.h"
 #include "mapplication.h"
 #include "../fervor/fvupdater.h"
 
-#include <QMessageBox> // For QT_REQUIRE_VERSION
-#include <QTimer>
-
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(seamlymeicon);
-    Q_INIT_RESOURCE(theme);
-    Q_INIT_RESOURCE(icon);
-    Q_INIT_RESOURCE(schema);
-    Q_INIT_RESOURCE(flags);
+  Q_INIT_RESOURCE(seamlymeicon);
+  Q_INIT_RESOURCE(theme);
+  Q_INIT_RESOURCE(icon);
+  Q_INIT_RESOURCE(schema);
+  Q_INIT_RESOURCE(flags);
 
-    QT_REQUIRE_VERSION(argc, argv, "5.2.0")
+  QT_WARNING_PUSH
+  QT_WARNING_DISABLE_GCC("-Wzero-as-null-pointer-constant")
+  QT_REQUIRE_VERSION(argc, argv, QT_VERSION_STR)
+  QT_WARNING_POP
 
 #ifndef Q_OS_MAC // supports natively
-    InitHighDpiScaling(argc, argv);
-#endif //Q_OS_MAC
+  InitHighDpiScaling(argc, argv);
+#endif
 
-    MApplication app(argc, argv);
-    app.InitOptions();
+  MApplication app(argc, argv);
+  app.InitOptions();
 
-    QTimer::singleShot(0, &app, SLOT(ProcessCMD()));
+  QTimer::singleShot(0, &app, &MApplication::ProcessCMD);
 
-    return app.exec();
+  return app.exec();
 }

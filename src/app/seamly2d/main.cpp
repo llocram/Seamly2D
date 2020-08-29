@@ -49,67 +49,67 @@
  **
  *************************************************************************/
 
+#include <QMessageBox> // For QT_REQUIRE_VERSION
+#include <QTimer>
+
 #include "mainwindow.h"
 #include "core/vapplication.h"
 #include "../fervor/fvupdater.h"
 #include "../vpatterndb/vpiecenode.h"
 
-#include <QMessageBox> // For QT_REQUIRE_VERSION
-#include <QTimer>
-
-//---------------------------------------------------------------------------------------------------------------------
-
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(cursor);
-    Q_INIT_RESOURCE(icon);
-    Q_INIT_RESOURCE(schema);
-    Q_INIT_RESOURCE(theme);
-    Q_INIT_RESOURCE(flags);
-    Q_INIT_RESOURCE(icons);
-    Q_INIT_RESOURCE(toolicon);
+  Q_INIT_RESOURCE(cursor);
+  Q_INIT_RESOURCE(icon);
+  Q_INIT_RESOURCE(schema);
+  Q_INIT_RESOURCE(theme);
+  Q_INIT_RESOURCE(flags);
+  Q_INIT_RESOURCE(icons);
+  Q_INIT_RESOURCE(toolicon);
 
-    QT_REQUIRE_VERSION(argc, argv, "5.2.0")
+  QT_WARNING_PUSH
+  QT_WARNING_DISABLE_GCC("-Wzero-as-null-pointer-constant")
+  QT_REQUIRE_VERSION(argc, argv, QT_VERSION_STR)
+  QT_WARNING_POP
 
-    // Need to internally move a node inside a piece main path
-    qRegisterMetaTypeStreamOperators<VPieceNode>("VPieceNode");
+  // Need to internally move a node inside a piece main path
+  qRegisterMetaTypeStreamOperators<VPieceNode>("VPieceNode");
 
 #ifndef Q_OS_MAC // supports natively
-    InitHighDpiScaling(argc, argv);
-#endif //Q_OS_MAC
+  InitHighDpiScaling(argc, argv);
+#endif 
 
-    VApplication app(argc, argv);
+  VApplication app(argc, argv);
 
-    app.InitOptions();
+  app.InitOptions();
 
-    // Due to unknown reasons version checker cause a crash. See issue #633.
-    // Before we will find what cause such crashes it will stay disabled in Release mode.
+#ifndef Q_OS_MAC // supports natively
+  app.setWindowIcon(QIcon(":/icon/64x64/icon64x64.png"));
+#endif   
+  
+  // Due to unknown reasons version checker cause a crash. See issue #633.
+  // Before we will find what cause such crashes it will stay disabled in Release mode.
 #ifndef V_NO_ASSERT
-    if (VApplication::IsGUIMode())
-    {
-        // Set feed URL before doing anything else
-        FvUpdater::sharedUpdater()->SetFeedURL(defaultFeedURL);
+  if (VApplication::IsGUIMode())
+  {
+    FvUpdater::sharedUpdater()->SetFeedURL(defaultFeedURL);
+    FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
+  }
+#endif
 
-        // Check for updates automatically
-        FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
-    }
-#endif // V_NO_ASSERT
+  MainWindow w;
 
-    MainWindow w;
-#if !defined(Q_OS_MAC)
-    app.setWindowIcon(QIcon(":/icon/64x64/icon64x64.png"));
-#endif // !defined(Q_OS_MAC)
-    app.setMainWindow(&w);
+  app.setMainWindow(&w);
 
-    int msec = 0;
-    //Before we load pattern show window.
-    if (VApplication::IsGUIMode())
-    {
-        w.show();
-        msec = 15; // set delay for correct the first fitbest zoom
-    }
+  int msec = 0;
+  //Before we load pattern show window.
+  if (VApplication::IsGUIMode())
+  {
+    w.show();
+    msec = 15; // set delay for correct the first fitbest zoom
+  }
 
-    QTimer::singleShot(msec, &w, SLOT(ProcessCMD()));
+  QTimer::singleShot(msec, &w, &MainWindow::ProcessCMD);
 
-    return app.exec();
+  return app.exec();
 }
