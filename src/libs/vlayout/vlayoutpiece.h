@@ -160,7 +160,7 @@ public:
     Q_REQUIRED_RESULT QGraphicsItem     *GetItem(bool textAsPaths) const;
 
 private:
-    QSharedDataPointer<VLayoutPieceData> d;
+    QSharedDataPointer<VLayoutPieceData> d_;
 
     QVector<QPointF>                     DetailPath() const;
 
@@ -172,8 +172,8 @@ private:
                                                             const VTextManager &tm, bool textAsPaths) const;
     void                                 CreateGrainlineItem(QGraphicsItem *parent) const;
 
-    template <class T>
-    QVector<T>                           Map(const QVector<T> &points) const;
+    template<class T>
+    QVector<T> Map(const QVector<T>& points) const;
 
     QLineF                               Edge(const QVector<QPointF> &path, int i) const;
     int                                  EdgeByPoint(const QVector<QPointF> &path, const QPointF &p1) const;

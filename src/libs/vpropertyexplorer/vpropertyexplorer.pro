@@ -1,32 +1,16 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2014-08-26T14:18:08
-#
-#-------------------------------------------------
-
-# File with common stuff for whole project
-message("Entering vpropertyexplorer.pro")
 include(../../../common.pri)
+include(vpropertyexplorer.pri)
+include(warnings.pri)
+include(../libs.pri)
 
-# Library use widgets
-QT       += core widgets
+QT += \
+    core \
+    widgets
 
-# We don't need gui library.
-QT       -= gui
+QT -= gui
 
-# Name of library
 TARGET = vpropertyexplorer
-
-# We want create library
 TEMPLATE = lib
-
-# Since Q5.4 available support C++14
-greaterThan(QT_MAJOR_VERSION, 4):greaterThan(QT_MINOR_VERSION, 3) {
-    CONFIG += c++14
-} else {
-    # We use C++11 standard
-    CONFIG += c++11
-}
 
 # Since Qt 5.4.0 the source code location is recorded only in debug builds.
 # We need this information also in release builds. For this need define QT_MESSAGELOGCONTEXT.
@@ -34,24 +18,17 @@ DEFINES += QT_MESSAGELOGCONTEXT
 
 DEFINES += VPROPERTYEXPLORER_LIBRARY
 
-# directory for executable file
 DESTDIR = bin
-
-# files created moc
 MOC_DIR = moc
-
-# objecs files
 OBJECTS_DIR = obj
 
 # Allow MAC OS X to find library inside a bundle
 macx:QMAKE_SONAME_PREFIX = @rpath
 
-include(vpropertyexplorer.pri)
-
 # Set "make install" command for Unix-like systems.
-unix:!macx{
-    isEmpty(PREFIX_LIB){
-        isEmpty(PREFIX){
+unix:!macx {
+    isEmpty(PREFIX_LIB) {
+        isEmpty(PREFIX) {
             PR_LIB = $$DEFAULT_PREFIX
         } else {
             PR_LIB = $$PREFIX
@@ -66,24 +43,23 @@ unix:!macx{
     INSTALLS += target
 }
 
-# Set using ccache. Function enable_ccache() defined in common.pri.
 $$enable_ccache()
 
-include(warnings.pri)
+# Release mode
+CONFIG(release, debug|release) {
+    DEFINES += V_NO_ASSERT
 
-CONFIG(release, debug|release){
-    # Release mode
     !*msvc*:CONFIG += silent
 
-    !unix:*g++*{
+    !unix:*g++* {
         QMAKE_CXXFLAGS += -fno-omit-frame-pointer # Need for exchndl.dll
     }
 
-    checkWarnings{
+    checkWarnings {
         unix:include(warnings.pri)
     }
 
-    !macx:!*msvc*{
+    !macx:!*msvc* {
         noDebugSymbols{ # For enable run qmake with CONFIG+=noDebugSymbols
             # do nothing
         } else {
@@ -106,5 +82,3 @@ CONFIG(release, debug|release){
         }
     }
 }
-
-include (../libs.pri)

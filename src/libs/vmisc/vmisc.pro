@@ -1,30 +1,18 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2015-06-15T14:07:14
-#
-#-------------------------------------------------
-
-# File with common stuff for whole
-message("Entering vmisc.pro")
 include(../../../common.pri)
+include(vmisc.pri)
+include(warnings.pri)
+include (../libs.pri)
 
-QT += widgets printsupport testlib gui
+QT += \
+    widgets \
+    printsupport \
+    testlib \
+    gui
 
-# Name of library
 TARGET = vmisc
-
-# We want to create a library
 TEMPLATE = lib
 
-CONFIG += staticlib # Making static library
-
-# Since Q5.4 available support C++14
-greaterThan(QT_MAJOR_VERSION, 4):greaterThan(QT_MINOR_VERSION, 3) {
-    CONFIG += c++14
-} else {
-    # We use C++11 standard
-    CONFIG += c++11
-}
+CONFIG += staticlib
 
 # Use out-of-source builds (shadow builds)
 CONFIG -= debug_and_release debug_and_release_target
@@ -33,44 +21,32 @@ CONFIG -= debug_and_release debug_and_release_target
 # We need this information also in release builds. For this need define QT_MESSAGELOGCONTEXT.
 DEFINES += QT_MESSAGELOGCONTEXT
 
-include(vmisc.pri)
-
-# Resource files. This files will be included in binary.
 RESOURCES += \
     share/resources/theme.qrc \ # Windows theme icons.
     share/resources/icon.qrc \ # All other icons except cursors and Windows theme.
     share/resources/flags.qrc
 
-# This is static library so no need in "make install"
-
-# directory for executable file
 DESTDIR = bin
-
-# files created moc
 MOC_DIR = moc
-
-# objecs files
 OBJECTS_DIR = obj
 
-# Set using ccache. Function enable_ccache() defined in common.pri.
 $$enable_ccache()
 
-include(warnings.pri)
-
-CONFIG(debug, debug|release){
+CONFIG(debug, debug|release) {
     # Debug mode
     #Calculate latest tag distance and build revision only in release mode. Change number each time requare
     #recompilation precompiled headers file.
     DEFINES += "LATEST_TAG_DISTANCE=0"
-}else{
+} else {
     # Release mode
-    !*msvc*:CONFIG += silent
     DEFINES += V_NO_ASSERT
-    !unix:*g++*{
+
+    !*msvc*:CONFIG += silent
+    !unix:*g++* {
         QMAKE_CXXFLAGS += -fno-omit-frame-pointer # Need for exchndl.dll
     }
 
-    noDebugSymbols{ # For enable run qmake with CONFIG+=noDebugSymbols
+    noDebugSymbols { # For enable run qmake with CONFIG+=noDebugSymbols
         # do nothing
     } else {
         !macx:!*msvc*{
@@ -98,9 +74,9 @@ CONFIG(debug, debug|release){
     #DEFINES += HG_VERSION=\\"$$HG_VERSION\\"
 
     #get latest git tag and it's distance from HEAD
-    macx{
+    macx {
         GIT = /usr/local/bin/git # Can't defeat PATH variable on Mac OS.
-    }else {
+    } else {
         GIT = GIT # All other platforms all OK.
     }
 
@@ -112,7 +88,7 @@ CONFIG(debug, debug|release){
     tag_split = $$split(tag_all, "-") #split at the dashes
     GIT_DISTANCE = $$member(tag_split,1) #get 2nd element of results
 
-    isEmpty(GIT_DISTANCE){
+    isEmpty(GIT_DISTANCE) {
         GIT_DISTANCE = 0 # if we can't find local revision left 0.
     }
     message("vmisc.pro: Latest tag distance:" $${GIT_DISTANCE})
@@ -120,5 +96,3 @@ CONFIG(debug, debug|release){
     DEFINES += GIT_VERSION=\\"$$GIT_VERSION\\"
 
 }
-
-include (../libs.pri)

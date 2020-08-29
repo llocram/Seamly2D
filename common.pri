@@ -1,3 +1,15 @@
+greaterThan(QT_MAJOR_VERSION, 5):greaterThan(QT_MINOR_VERSION, 11) {
+    CONFIG += c++17
+} else {
+    unix {
+        QMAKE_CXXFLAGS += -std=c++17
+    }
+    
+    *msvc* {
+        QMAKE_CXXFLAGS += -std:c++17
+    }
+}
+
 win32 {
     # Because "copy" doesn't support files that containe plus sign (+)
     # in name we will use xcopy instead.

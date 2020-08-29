@@ -51,6 +51,8 @@
 
 #include "vlayoutpiece.h"
 
+#include <optional>
+
 #include <QBrush>
 #include <QFlags>
 #include <QFont>
@@ -372,18 +374,18 @@ VLayoutPiece &VLayoutPiece::operator=(VLayoutPiece &&detail) Q_DECL_NOTHROW { Sw
 #endif
 
 void VLayoutPiece::Swap(VLayoutPiece &detail) Q_DECL_NOTHROW
-{ VAbstractPiece::Swap(detail); std::swap(d, detail.d); }
+{ VAbstractPiece::Swap(detail); std::swap(d_, detail.d_); }
 
 //---------------------------------------------------------------------------------------------------------------------
 VLayoutPiece::VLayoutPiece()
     : VAbstractPiece(),
-      d(new VLayoutPieceData)
+      d_(new VLayoutPieceData)
 {}
 
 //---------------------------------------------------------------------------------------------------------------------
 VLayoutPiece::VLayoutPiece(const VLayoutPiece &detail)
     : VAbstractPiece(detail),
-      d(detail.d)
+      d_(detail.d_)
 {}
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -394,7 +396,7 @@ VLayoutPiece &VLayoutPiece::operator=(const VLayoutPiece &detail)
         return *this;
     }
     VAbstractPiece::operator=(detail);
-    d = detail.d;
+    d_ = detail.d_;
     return *this;
 }
 
@@ -453,13 +455,13 @@ VLayoutPiece VLayoutPiece::Create(const VPiece &piece, const VContainer *pattern
 // cppcheck-suppress unusedFunction
 QVector<QPointF> VLayoutPiece::GetContourPoints() const
 {
-    return Map(d->contour);
+    return Map(d_->contour);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void VLayoutPiece::SetCountourPoints(const QVector<QPointF> &points, bool hideMainPath)
 {
-    d->contour = RemoveDublicates(points, false);
+    d_->contour = RemoveDublicates(points, false);
     SetHideMainPath(hideMainPath);
 }
 
@@ -467,7 +469,7 @@ void VLayoutPiece::SetCountourPoints(const QVector<QPointF> &points, bool hideMa
 // cppcheck-suppress unusedFunction
 QVector<QPointF> VLayoutPiece::GetSeamAllowancePoints() const
 {
-    return Map(d->seamAllowance);
+    return Map(d_->seamAllowance);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -477,10 +479,10 @@ void VLayoutPiece::SetSeamAllowancePoints(const QVector<QPointF> &points, bool s
     {
         SetSeamAllowance(seamAllowance);
         SetSeamAllowanceBuiltIn(seamAllowanceBuiltIn);
-        d->seamAllowance = points;
-        if (not d->seamAllowance.isEmpty())
+        d_->seamAllowance = points;
+        if (not d_->seamAllowance.isEmpty())
         {
-            d->seamAllowance = RemoveDublicates(d->seamAllowance, false);
+            d_->seamAllowance = RemoveDublicates(d_->seamAllowance, false);
         }
         else if (not IsSeamAllowanceBuiltIn())
         {
@@ -493,15 +495,15 @@ void VLayoutPiece::SetSeamAllowancePoints(const QVector<QPointF> &points, bool s
 //---------------------------------------------------------------------------------------------------------------------
 QVector<QPointF> VLayoutPiece::GetLayoutAllowancePoints() const
 {
-    return Map(d->layoutAllowance);
+    return Map(d_->layoutAllowance);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 QPointF VLayoutPiece::GetPieceTextPosition() const
 {
-    if (d->detailLabel.count() > 2)
+    if (d_->detailLabel.count() > 2)
     {
-        return d->matrix.map(d->detailLabel.first());
+        return d_->matrix.map(d_->detailLabel.first());
     }
     else
     {
@@ -512,7 +514,7 @@ QPointF VLayoutPiece::GetPieceTextPosition() const
 //---------------------------------------------------------------------------------------------------------------------
 QStringList VLayoutPiece::GetPieceText() const
 {
-    return PieceLabelText(d->detailLabel, d->m_tmDetail);
+    return PieceLabelText(d_->detailLabel, d_->m_tmDetail);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -546,23 +548,23 @@ void VLayoutPiece::SetPieceText(const QString& qsName, const VPieceLabelData& da
     }
 
     QScopedPointer<QGraphicsItem> item(GetMainPathItem());
-    d->detailLabel = CorrectPosition(item->boundingRect(), v);
+    d_->detailLabel = CorrectPosition(item->boundingRect(), v);
 
     // generate text
-    d->m_tmDetail.SetFont(font);
-    d->m_tmDetail.SetFontSize(data.GetFontSize());
-    d->m_tmDetail.Update(qsName, data);
+    d_->m_tmDetail.SetFont(font);
+    d_->m_tmDetail.SetFontSize(data.GetFontSize());
+    d_->m_tmDetail.Update(qsName, data);
     // this will generate the lines of text
-    d->m_tmDetail.SetFontSize(data.GetFontSize());
-    d->m_tmDetail.FitFontSize(labelWidth, labelHeight);
+    d_->m_tmDetail.SetFontSize(data.GetFontSize());
+    d_->m_tmDetail.FitFontSize(labelWidth, labelHeight);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 QPointF VLayoutPiece::GetPatternTextPosition() const
 {
-    if (d->patternInfo.count() > 2)
+    if (d_->patternInfo.count() > 2)
     {
-        return d->matrix.map(d->patternInfo.first());
+        return d_->matrix.map(d_->patternInfo.first());
     }
     else
     {
@@ -573,7 +575,7 @@ QPointF VLayoutPiece::GetPatternTextPosition() const
 //---------------------------------------------------------------------------------------------------------------------
 QStringList VLayoutPiece::GetPatternText() const
 {
-    return PieceLabelText(d->patternInfo, d->m_tmPattern);
+    return PieceLabelText(d_->patternInfo, d_->m_tmPattern);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -605,17 +607,17 @@ void VLayoutPiece::SetPatternInfo(VAbstractPattern* pDoc, const VPatternLabelDat
         v[i] = RotatePoint(ptCenter, v.at(i), dAng);
     }
     QScopedPointer<QGraphicsItem> item(GetMainPathItem());
-    d->patternInfo = CorrectPosition(item->boundingRect(), v);
+    d_->patternInfo = CorrectPosition(item->boundingRect(), v);
 
     // Generate text
-    d->m_tmPattern.SetFont(font);
-    d->m_tmPattern.SetFontSize(geom.GetFontSize());
+    d_->m_tmPattern.SetFont(font);
+    d_->m_tmPattern.SetFontSize(geom.GetFontSize());
 
-    d->m_tmPattern.Update(pDoc);
+    d_->m_tmPattern.Update(pDoc);
 
     // generate lines of text
-    d->m_tmPattern.SetFontSize(geom.GetFontSize());
-    d->m_tmPattern.FitFontSize(labelWidth, labelHeight);
+    d_->m_tmPattern.SetFontSize(geom.GetFontSize());
+    d_->m_tmPattern.FitFontSize(labelWidth, labelHeight);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -658,37 +660,37 @@ void VLayoutPiece::SetGrainline(const VGrainlineData& geom, const VContainer* pa
     }
 
     QScopedPointer<QGraphicsItem> item(GetMainPathItem());
-    d->grainlinePoints = CorrectPosition(item->boundingRect(), v);
+    d_->grainlinePoints = CorrectPosition(item->boundingRect(), v);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 QVector<QPointF> VLayoutPiece::GetGrainline() const
 {
-    return Map(d->grainlinePoints);
+    return Map(d_->grainlinePoints);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 QTransform VLayoutPiece::GetMatrix() const
 {
-    return d->matrix;
+    return d_->matrix;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void VLayoutPiece::SetMatrix(const QTransform &matrix)
 {
-    d->matrix = matrix;
+    d_->matrix = matrix;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 qreal VLayoutPiece::GetLayoutWidth() const
 {
-    return d->layoutWidth;
+    return d_->layoutWidth;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void VLayoutPiece::SetLayoutWidth(const qreal &value)
 {
-    d->layoutWidth = value;
+    d_->layoutWidth = value;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -696,7 +698,7 @@ void VLayoutPiece::Translate(qreal dx, qreal dy)
 {
     QTransform m;
     m.translate(dx, dy);
-    d->matrix *= m;
+    d_->matrix *= m;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -706,7 +708,7 @@ void VLayoutPiece::Rotate(const QPointF &originPoint, qreal degrees)
     m.translate(originPoint.x(), originPoint.y());
     m.rotate(-degrees);
     m.translate(-originPoint.x(), -originPoint.y());
-    d->matrix *= m;
+    d_->matrix *= m;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -725,21 +727,21 @@ void VLayoutPiece::Mirror(const QLineF &edge)
     m.translate(p2.x(), p2.y());
     m.rotate(-angle);
     m.translate(-p2.x(), -p2.y());
-    d->matrix *= m;
+    d_->matrix *= m;
 
     m.reset();
     m.translate(p2.x(), p2.y());
     m.scale(m.m11(), m.m22()*-1);
     m.translate(-p2.x(), -p2.y());
-    d->matrix *= m;
+    d_->matrix *= m;
 
     m.reset();
     m.translate(p2.x(), p2.y());
     m.rotate(-(360-angle));
     m.translate(-p2.x(), -p2.y());
-    d->matrix *= m;
+    d_->matrix *= m;
 
-    d->mirror = !d->mirror;
+    d_->mirror = !d_->mirror;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -751,7 +753,7 @@ int VLayoutPiece::DetailEdgesCount() const
 //---------------------------------------------------------------------------------------------------------------------
 int VLayoutPiece::LayoutEdgesCount() const
 {
-    return d->layoutAllowance.count();
+    return d_->layoutAllowance.count();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -763,7 +765,7 @@ QLineF VLayoutPiece::DetailEdge(int i) const
 //---------------------------------------------------------------------------------------------------------------------
 QLineF VLayoutPiece::LayoutEdge(int i) const
 {
-    return Edge(d->layoutAllowance, i);
+    return Edge(d_->layoutAllowance, i);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -775,7 +777,7 @@ int VLayoutPiece::DetailEdgeByPoint(const QPointF &p1) const
 //---------------------------------------------------------------------------------------------------------------------
 int VLayoutPiece::LayoutEdgeByPoint(const QPointF &p1) const
 {
-    return EdgeByPoint(d->layoutAllowance, p1);
+    return EdgeByPoint(d_->layoutAllowance, p1);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -813,9 +815,9 @@ qreal VLayoutPiece::Diagonal() const
 //---------------------------------------------------------------------------------------------------------------------
 bool VLayoutPiece::isNull() const
 {
-    if (d->contour.isEmpty() == false && d->layoutWidth > 0)
+    if (d_->contour.isEmpty() == false && d_->layoutWidth > 0)
     {
-        if (IsSeamAllowance() && not IsSeamAllowanceBuiltIn() && d->seamAllowance.isEmpty() == false)
+        if (IsSeamAllowance() && not IsSeamAllowanceBuiltIn() && d_->seamAllowance.isEmpty() == false)
         {
             return false;
         }
@@ -833,12 +835,12 @@ bool VLayoutPiece::isNull() const
 //---------------------------------------------------------------------------------------------------------------------
 qint64 VLayoutPiece::Square() const
 {
-    if (d->layoutAllowance.isEmpty()) //-V807
+    if (d_->layoutAllowance.isEmpty()) //-V807
     {
         return 0;
     }
 
-    const qreal res = SumTrapezoids(d->layoutAllowance);
+    const qreal res = SumTrapezoids(d_->layoutAllowance);
 
     const qint64 sq = qFloor(qAbs(res/2.0));
     return sq;
@@ -847,35 +849,35 @@ qint64 VLayoutPiece::Square() const
 //---------------------------------------------------------------------------------------------------------------------
 void VLayoutPiece::SetLayoutAllowancePoints()
 {
-    if (d->layoutWidth > 0)
+    if (d_->layoutWidth > 0)
     {
         if (IsSeamAllowance() && not IsSeamAllowanceBuiltIn())
         {
-            d->layoutAllowance = Equidistant(PrepareAllowance(GetSeamAllowancePoints()), d->layoutWidth);
-            if (d->layoutAllowance.isEmpty() == false)
+            d_->layoutAllowance = Equidistant(PrepareAllowance(GetSeamAllowancePoints()), d_->layoutWidth);
+            if (d_->layoutAllowance.isEmpty() == false)
             {
-                d->layoutAllowance.removeLast();
+                d_->layoutAllowance.removeLast();
             }
         }
         else
         {
-            d->layoutAllowance = Equidistant(PrepareAllowance(GetContourPoints()), d->layoutWidth);
-            if (d->layoutAllowance.isEmpty() == false)
+            d_->layoutAllowance = Equidistant(PrepareAllowance(GetContourPoints()), d_->layoutWidth);
+            if (d_->layoutAllowance.isEmpty() == false)
             {
-                d->layoutAllowance.removeLast();
+                d_->layoutAllowance.removeLast();
             }
         }
     }
     else
     {
-        d->layoutAllowance.clear();
+        d_->layoutAllowance.clear();
     }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 QVector<QLineF> VLayoutPiece::getNotches() const
 {
-    return Map(d->notches);
+    return Map(d_->notches);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -883,7 +885,7 @@ void VLayoutPiece::setNotches(const QVector<QLineF> &notches)
 {
     if (IsSeamAllowance())
     {
-        d->notches = notches;
+        d_->notches = notches;
     }
 }
 
@@ -892,11 +894,11 @@ QVector<QVector<QPointF> > VLayoutPiece::InternalPathsForCut(bool cut) const
 {
     QVector<QVector<QPointF> > paths;
 
-    for (int i=0;i < d->m_internalPaths.count(); ++i)
+    for (int i=0;i < d_->m_internalPaths.count(); ++i)
     {
-        if (d->m_internalPaths.at(i).IsCutPath() == cut)
+        if (d_->m_internalPaths.at(i).IsCutPath() == cut)
         {
-            paths.append(Map(d->m_internalPaths.at(i).Points()));
+            paths.append(Map(d_->m_internalPaths.at(i).Points()));
         }
     }
 
@@ -906,35 +908,28 @@ QVector<QVector<QPointF> > VLayoutPiece::InternalPathsForCut(bool cut) const
 //---------------------------------------------------------------------------------------------------------------------
 QVector<VLayoutPiecePath> VLayoutPiece::GetInternalPaths() const
 {
-    return d->m_internalPaths;
+    return d_->m_internalPaths;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void VLayoutPiece::SetInternalPaths(const QVector<VLayoutPiecePath> &internalPaths)
 {
-    d->m_internalPaths = internalPaths;
+    d_->m_internalPaths = internalPaths;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-template <class T>
-QVector<T> VLayoutPiece::Map(const QVector<T> &points) const
+template<class T>
+QVector<T> VLayoutPiece::Map(const QVector<T>& points) const
 {
-    QVector<T> p;
-    for (int i = 0; i < points.size(); ++i)
-    {
-        p.append(d->matrix.map(points.at(i)));
-    }
-
-    if (d->mirror)
-    {
-        QList<T> list = p.toList();
-        for (int k=0, s=list.size(), max=(s/2); k<max; k++)
-        {
-			list.swapItemsAt(k, s-(1+k));
-        }
-        p = list.toVector();
-    }
-    return p;
+  QVector<T> p;
+  p.reserve(points.size());
+  std::transform(points.begin(), points.end(), p.begin(),
+                 [this](const auto& el) { return d_->matrix.map(el); });
+  if (d_->mirror)
+  {
+    std::reverse(p.begin(), p.end());
+  }
+  return p;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -999,10 +994,10 @@ void VLayoutPiece::CreateInternalPathItem(int i, QGraphicsItem *parent) const
 {
     SCASSERT(parent != nullptr)
     QGraphicsPathItem* item = new QGraphicsPathItem(parent);
-    item->setPath(d->matrix.map(d->m_internalPaths.at(i).GetPainterPath()));
+    item->setPath(d_->matrix.map(d_->m_internalPaths.at(i).GetPainterPath()));
 
     QPen pen = item->pen();
-    pen.setStyle(d->m_internalPaths.at(i).PenStyle());
+    pen.setStyle(d_->m_internalPaths.at(i).PenStyle());
     item->setPen(pen);
 }
 
@@ -1028,13 +1023,13 @@ QGraphicsItem *VLayoutPiece::GetItem(bool textAsPaths) const
 {
     QGraphicsPathItem *item = GetMainItem();
 
-    for (int i = 0; i < d->m_internalPaths.count(); ++i)
+    for (int i = 0; i < d_->m_internalPaths.count(); ++i)
     {
         CreateInternalPathItem(i, item);
     }
 
-    CreateLabelStrings(item, d->detailLabel, d->m_tmDetail, textAsPaths);
-    CreateLabelStrings(item, d->patternInfo, d->m_tmPattern, textAsPaths);
+    CreateLabelStrings(item, d_->detailLabel, d_->m_tmDetail, textAsPaths);
+    CreateLabelStrings(item, d_->patternInfo, d_->m_tmPattern, textAsPaths);
     CreateGrainlineItem(item);
 
     return item;
@@ -1095,7 +1090,7 @@ void VLayoutPiece::CreateLabelStrings(QGraphicsItem *parent, const QVector<QPoin
             // set up the rotation around top-left corner matrix
             QTransform labelMatrix;
             labelMatrix.translate(labelShape.at(0).x(), labelShape.at(0).y());
-            if (d->mirror)
+            if (d_->mirror)
             {
                 labelMatrix.scale(-1, 1);
                 labelMatrix.rotate(-angle);
@@ -1108,7 +1103,7 @@ void VLayoutPiece::CreateLabelStrings(QGraphicsItem *parent, const QVector<QPoin
                 labelMatrix.translate(dX, dY); // Each string has own position
             }
 
-            labelMatrix *= d->matrix;
+            labelMatrix *= d_->matrix;
 
             if (textAsPaths)
             {
@@ -1140,7 +1135,7 @@ void VLayoutPiece::CreateGrainlineItem(QGraphicsItem *parent) const
 {
     SCASSERT(parent != nullptr)
 
-    if (d->grainlinePoints.count() < 2)
+    if (d_->grainlinePoints.count() < 2)
     {
         return;
     }
@@ -1162,11 +1157,11 @@ QVector<QPointF> VLayoutPiece::DetailPath() const
 {
     if (IsSeamAllowance() && not IsSeamAllowanceBuiltIn())
     {
-        return d->seamAllowance;
+        return d_->seamAllowance;
     }
     else
     {
-        return d->contour;
+        return d_->contour;
     }
 }
 
@@ -1202,13 +1197,13 @@ QGraphicsPathItem *VLayoutPiece::GetMainPathItem() const
 //---------------------------------------------------------------------------------------------------------------------
 bool VLayoutPiece::IsMirror() const
 {
-    return d->mirror;
+    return d_->mirror;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void VLayoutPiece::SetMirror(bool value)
 {
-    d->mirror = value;
+    d_->mirror = value;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -1231,17 +1226,17 @@ QLineF VLayoutPiece::Edge(const QVector<QPointF> &path, int i) const
         i2 = 0;
     }
 
-    if (d->mirror)
+    if (d_->mirror)
     {
         const int oldI1 = i1;
         const int size = path.size()-1; //-V807
         i1 = size - i2;
         i2 = size - oldI1;
-        return QLineF(d->matrix.map(path.at(i2)), d->matrix.map(path.at(i1)));
+        return QLineF(d_->matrix.map(path.at(i2)), d_->matrix.map(path.at(i1)));
     }
     else
     {
-        return QLineF(d->matrix.map(path.at(i1)), d->matrix.map(path.at(i2)));
+        return QLineF(d_->matrix.map(path.at(i1)), d_->matrix.map(path.at(i2)));
     }
 }
 
